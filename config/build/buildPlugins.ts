@@ -2,12 +2,18 @@ import webpack, {Configuration} from 'webpack'
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {IBuildOptions} from "./types/type";
+import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
 
 export function buildPlugins(options: IBuildOptions): Configuration['plugins'] {
     const isDev = options.mode === 'development'
     const isProd = options.mode === 'production'
 
-    const plugins: Configuration['plugins'] = [new HtmlWebpackPlugin({template: options.paths.html})]
+    const plugins: Configuration['plugins'] = [
+        new HtmlWebpackPlugin({template: options.paths.html}),
+        new webpack.DefinePlugin({
+            __PLATFORM__: JSON.stringify(options.platform),
+        })
+    ]
 
     if (isDev) {
         plugins.push(new webpack.ProgressPlugin())
@@ -20,6 +26,9 @@ export function buildPlugins(options: IBuildOptions): Configuration['plugins'] {
                 chunkFilename: 'css/[name].[contenthash:8].css'
             }
         ))
+        if (options.analyzer) {
+            plugins.push(new BundleAnalyzerPlugin())
+        }
     }
 
     return plugins

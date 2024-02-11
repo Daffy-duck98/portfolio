@@ -1,13 +1,18 @@
 export interface IBuildPaths {
     entry: string,
     html: string,
-    output: string
+    output: string,
+    src: string
+
 }
 
 export type TBuildMode = 'production' | 'development';
+export type TBuildPlatform = 'mobile' | 'desktop';
 
 export interface IBuildOptions {
     port: number,
     paths: IBuildPaths,
-    mode: TBuildMode
+    mode: TBuildMode,
+    platform: TBuildPlatform,
+    analyzer?: boolean
 }
